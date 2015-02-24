@@ -21,7 +21,7 @@ if __name__ == "__main__":
     #   num of items to parse,(parse n items then stop default=10) set to `0` to parse up to the most recent
     #   threads(default=1)
     # )
-    # Comment out the sites you do not want to run
+    # Uncomment the sites you do not want to parse
     scrapes = {}
     # scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 60, 10)
     # scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 5, 1)
