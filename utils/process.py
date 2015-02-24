@@ -47,7 +47,11 @@ class Process(Scraper):
         while True:
             num = self._q.get()
             print(self.log("Processing: " + str(num)), end='\r')
-            self.site.parse(num)
+            try:
+                self.site.parse(num)
+            except Exception as e:
+                print(self.log("Exception [parse thread]: " + str(e)))
+                self.stop()
             # Having self._last_id here, it may reparse the same thing on next run
             #   because the last item processed may not have been the last item in the list because it is async
             self._last_id = num
