@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-
 from utils.scraper import Scraper
 
 
@@ -38,7 +37,7 @@ class Tuebl(Scraper):
         # get the html from the url
         html = self.get_html(url, self._url_header)
         if not html:
-            return 'Skipping...'
+            return False
         soup = BeautifulSoup(html)
 
         # Find data

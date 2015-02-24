@@ -59,7 +59,10 @@ class Scraper:
             self.error(e.code, url)
             self.log("Error [get_html]: " + str(e.code) + " " + url)
         else:
-            html = response.read().decode('utf-8')
+            try:
+                html = response.read().decode('utf-8')
+            except UnicodeDecodeError as e:
+                self.log("Error [get_html][UnicodeDecodeError]:" + str(e) + " " + url )
         return html
 
     def sanitize(self, string):

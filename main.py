@@ -23,8 +23,8 @@ if __name__ == "__main__":
     # )
     # Comment out the sites you do not want to run
     scrapes = {}
-    scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 60, 10)
-    scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 60, 10)
+    # scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 60, 10)
+    # scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 5, 1)
 
     # Start parser
     try:
