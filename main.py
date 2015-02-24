@@ -22,11 +22,14 @@ if __name__ == "__main__":
     #   num of items to parse,(parse n items then stop default=10) set to `0` to parse up to the most recent
     #   threads(default=1)
     # )
-    # Uncomment the sites you do not want to parse
+    # Uncomment the sites you do want to parse
     scrapes = {}
+    ## Ebook sites
     # scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 100, 5)  # http://tuebl.ca/
     # scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 100, 5)  # http://it-ebooks.info/
-    # scrapes['wallhaven'] = Process(Wallhaven, './dl_test/alphaWallhaven', 100, 5)  # http://alpha.wallhaven.cc/
+
+    ## Image sites
+    #scrapes['wallhaven'] = Process(Wallhaven, './dl_test/alphaWallhaven', 100, 5)  # http://alpha.wallhaven.cc/
 
     # Start parser
     try:
