@@ -1,6 +1,7 @@
 import sys
-
-from modules.scrape_tuebl import Tuebl
+from utils.process import Process
+from modules.tuebl import Tuebl
+from modules.itebooks import ItEbooks
 
 
 def stop():
@@ -15,15 +16,15 @@ def stop():
 if __name__ == "__main__":
     # Initialize parser
     # module(
+    #   site, (class of the site you want to parse)
     #   dir, (where the data should be saved to)
     #   num of items to parse,(parse n items then stop default=10) set to `0` to parse up to the most recent
     #   threads(default=1)
     # )
     # Comment out the sites you do not want to run
     scrapes = {}
-    scrapes['tuebl'] = Tuebl('./dl_test/tuebl', 60, 10)
-    scrapes['itebooks'] = Tuebl('./dl_test/itebooks', 60, 10)
-
+    scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 60, 10)
+    scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 60, 10)
 
     # Start parser
     try:

@@ -6,10 +6,10 @@ import hashlib
 
 
 class Scraper:
-    def __init__(self):
+    def __init__(self, log_file):
         self._errors = {}
         # Set default log path
-        self.log_file = './logs'
+        self.log_file = log_file
 
     def download(self, url, file_path, header={}):
         self.log("Starting download: " + url)

@@ -1,58 +1,15 @@
-import os
-import sys
-import signal
-import queue
-import threading
 from bs4 import BeautifulSoup
-from scraper import Scraper
+
+from utils.scraper import Scraper
 
 
 class Tuebl(Scraper):
-    def __init__(self, base_dir, parse_count=10, threads=1):
-        super().__init__()
+    def __init__(self, base_dir, url_header, log_file):
+        super().__init__(log_file)
         self._base_dir = base_dir
-        self._progress_file = self._base_dir + "/progress"
-        self.log_file = self._base_dir + "/logs"
-        self._url_header = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
-        self._last_id = 0
-        self._max_id = 0
-        self._parse_count = parse_count
-        self._threads = threads
+        self._url_header = url_header
 
-    def start(self):
-        self._max_id = self._get_latest()
-        start_val = 1
-        # Get start val from progress file if exist
-        if os.path.isfile(self._progress_file):
-            with open(self._progress_file, 'r') as outfile:
-                start_val = int(outfile.read())+1
-        print(self.log("##\tStarting at: " + str(start_val)))
-
-        # Find out where to stop
-        end_val = start_val + self._parse_count
-        if self._parse_count == 0 and self._max_id != 0:
-            end_val = self._max_id
-
-        self._q = queue.Queue()
-        for i in range(self._threads):
-            t = threading.Thread(target=self._thread_setup)
-            t.daemon = True
-            t.start()
-
-        for item_id in range(start_val, end_val):
-            self._q.put(item_id)
-        self._q.join()
-
-        self._done()
-
-    def _thread_setup(self):
-        while True:
-            num = self._q.get()
-            print(self.log("Processing book: " + str(num)), end='\r')
-            self._parse(num)
-            self._q.task_done()
-
-    def _get_latest(self):
+    def get_latest(self):
         """
         Parse `http://tuebl.ca/browse/new` and get the id of the newest book
         :return: id of the newest item
@@ -68,17 +25,16 @@ class Tuebl(Scraper):
         print(self.log("##\tNewest upload: " + max_id))
         return int(max_id)
 
-    def _parse(self, id_):
+    def parse(self, id_):
         """
         Using BeautifulSoup, parse the page for the wallpaper and its properties
         :param id_: id of the book on `tuebl.ca`
         :return:
         """
-        self._last_id = id_
         prop = {}
         prop['id'] = str(id_)
 
-        url = "http://tuebl.ca/books/"+prop['id']
+        url = "http://tuebl.ca/books/" + prop['id']
         # get the html from the url
         html = self.get_html(url, self._url_header)
         if not html:
@@ -148,16 +104,3 @@ class Tuebl(Scraper):
         """
         # TODO: create list of series
         pass
-
-    def _done(self):
-        """
-        Done parsing/downloading, clean up and save progress
-        :return:
-        """
-        print("\n")  # Since we are using `\r` above, we need to enter down when exiting the script
-        self.save_progress(self._progress_file, self._last_id)
-
-    def stop(self):
-        # not sure what is the last thread to run since it is async, so reparse all current threads on next start
-        self._last_id = self._last_id - self._threads
-        self._done()
