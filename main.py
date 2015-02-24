@@ -2,6 +2,7 @@ import sys
 from utils.process import Process
 from modules.tuebl import Tuebl
 from modules.itebooks import ItEbooks
+from modules.wallhaven import Wallhaven
 
 
 def stop():
@@ -23,8 +24,9 @@ if __name__ == "__main__":
     # )
     # Uncomment the sites you do not want to parse
     scrapes = {}
-    # scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 60, 10)
-    # scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 5, 1)
+    # scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 100, 5)  # http://tuebl.ca/
+    # scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 100, 5)  # http://it-ebooks.info/
+    # scrapes['wallhaven'] = Process(Wallhaven, './dl_test/alphaWallhaven', 100, 5)  # http://alpha.wallhaven.cc/
 
     # Start parser
     try:
