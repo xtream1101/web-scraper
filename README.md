@@ -8,6 +8,6 @@ Developed using Python 3.4
 - BeautifulSoup4
 
 ## Usage
-- **Config:** In `main.py`, under `scrapes = {}`, uncomment the sites you want to parse and set the values being passed
+- **Config:** Edit config.ini
 
-- **Running:** `python main.py` 
+- **Running:** `python main.py configFile` 
