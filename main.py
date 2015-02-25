@@ -1,41 +1,57 @@
+import os
 import sys
+import argparse
+import configparser
 from utils.process import Process
-from modules.tuebl import Tuebl
-from modules.itebooks import ItEbooks
-from modules.wallhaven import Wallhaven
+# They are imported as all lowercase
+#   so it does not mater what case the user uses in the config file
+from modules.tuebl import Tuebl as tuebl
+from modules.itebooks import ItEbooks as itebooks
+from modules.wallhaven import Wallhaven as wallhaven
+
+parser = argparse.ArgumentParser()
+parser.add_argument('config', help='custom config file', nargs='?', default='./config.ini')
+args = parser.parse_args()
+
+
 
 
 def stop():
     """
     Save any data before exiting
     """
-    for site in scrapes:
-        print(scrapes[site].log("Exiting..."))
-        scrapes[site].stop()
+    for site in scrape:
+        print(scrape[site].log("Exiting..."))
+        scrape[site].stop()
     sys.exit(0)
 
 if __name__ == "__main__":
-    # Initialize parser
-    # module(
-    #   site, (class of the site you want to parse)
-    #   dir, (where the data should be saved to)
-    #   num of items to parse,(parse n items then stop default=10) set to `0` to parse up to the most recent
-    #   threads(default=1)
-    # )
-    # Uncomment the sites you do want to parse
-    scrapes = {}
-    ## Ebook sites
-    # scrapes['tuebl'] = Process(Tuebl, './dl_test/tuebl', 100, 5)  # http://tuebl.ca/
-    # scrapes['itebooks'] = Process(ItEbooks, './dl_test/itebooks', 100, 5)  # http://it-ebooks.info/
+    # Read config file
+    config = configparser.ConfigParser()
+    if not os.path.isfile(args.config):
+        print("Invalid config file")
+        sys.exit(0)
+    config.read(args.config)
 
-    ## Image sites
-    #scrapes['wallhaven'] = Process(Wallhaven, './dl_test/alphaWallhaven', 100, 5)  # http://alpha.wallhaven.cc/
+    # Parse config file
+    scrape = {}
+    for site in config.sections():
+        if config[site]['enabled'].lower() == 'true':
+            try:  # If it not a class skip it
+                site_class = getattr(sys.modules[__name__], site.lower())
+            except AttributeError as e:
+                print("\nThere is no module named " + site + "\n")
+                continue
+            dl_path = os.path.expanduser(config[site]['download_path'])
+            num_files = int(config[site]['number_of_files'])
+            threads = int(config[site]['threads'])
+            scrape[site] = Process(site_class, dl_path, num_files, threads)
 
-    # Start parser
+    # Start site parser
     try:
-        for site in scrapes:
+        for site in scrape:
             print("#### Scrapeing: " + site)
-            scrapes[site].start()
+            scrape[site].start()
     except Exception as e:
         print("Exception [main]: " + str(e))
         stop()
