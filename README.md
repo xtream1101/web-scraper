@@ -1,2 +1,2 @@
 # Web Scraper tool
-Project no located at https://github.com/keeper-of-data/web-scraper
+Project now located at https://github.com/keeper-of-data/web-scraper
