@@ -1,2 +1,3 @@
 # Web Scraper tool
-Project now located at https://github.com/keeper-of-data/web-scraper
+
+# Depreciated, replaced by individual repos that start with `scrape-`
